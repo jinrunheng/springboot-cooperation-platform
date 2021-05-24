@@ -7,8 +7,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class Result {
     private String msg;
     private String status;
+    private boolean isLogin;
     private Object data;
 }
