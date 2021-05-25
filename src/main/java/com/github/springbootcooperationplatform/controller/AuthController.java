@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 public class AuthController {
@@ -36,6 +39,52 @@ public class AuthController {
     @ResponseBody
     public String auth() {
         return JSON.toJSONString(Result.builder().status("ok").isLogin(false));
+    }
+
+    @PostMapping(path = "/auth/register")
+    @ResponseBody
+    public String register(@RequestBody Map<String, String> usernameAndPassword) {
+        // error msg:
+        // 1. 用户名或密码不能为空
+        // 2. 该用户已注册
+        // 3. 用户名长度为1~15个字符，只能是字母数字下划线中文，下划线位置不限
+        // 4. 密码长度为 6~16个任意字符
+        String username = usernameAndPassword.get("username");
+        String password = usernameAndPassword.get("password");
+        if (username == null || password == null || username.length() == 0 || password.length() == 0) {
+            return JSON.toJSONString(Result.builder()
+                    .status("fail")
+                    .msg("用户名或密码不能为空！").build());
+        }
+        if (!Objects.isNull(userService.getUserByName(username))) {
+            return JSON.toJSONString(Result.builder()
+                    .status("fail")
+                    .msg("该用户已注册").build());
+        }
+        Pattern pt = Pattern.compile("^[a-zA-Z0-9_\\u4e00-\\u9fa5]+$");
+        Matcher mt = pt.matcher(username);
+        if (!mt.matches() || username.length() < 1 || username.length() > 15) {
+            return JSON.toJSONString(Result.builder()
+                    .status("fail")
+                    .msg("用户名请以字母数字下划线或中文命名，且长度要求小于十六位").build());
+        }
+        if (password.length() > 16 || password.length() < 6) {
+            return JSON.toJSONString(Result.builder()
+                    .status("fail")
+                    .msg("密码长度要求为 6 ~ 16 位").build());
+        }
+        userService.save(username, password);
+        User savedUser = userService.getUserByName(username);
+        return JSON.toJSONString(Result.builder()
+                .status("ok")
+                .msg("注册成功")
+                .data(User.builder()
+                        .id(savedUser.getId())
+                        .username(savedUser.getUsername())
+                        .avatar("")
+                        .updatedAt(savedUser.getUpdatedAt())
+                        .createdAt(savedUser.getCreatedAt())
+                        .build()).build());
     }
 
     @PostMapping(path = "/auth/login")

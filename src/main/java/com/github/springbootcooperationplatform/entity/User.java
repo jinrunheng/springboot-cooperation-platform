@@ -13,6 +13,7 @@ import java.time.Instant;
 public class User {
     private Integer id;
     private String username;
+    private String encryptedPassword;
     private String avatar;
     private Instant createdAt;
     private Instant updatedAt;

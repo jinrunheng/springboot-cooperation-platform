@@ -1,5 +1,7 @@
 package com.github.springbootcooperationplatform.service;
 
+import com.github.springbootcooperationplatform.entity.User;
+import com.github.springbootcooperationplatform.repository.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -8,27 +10,32 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Objects;
 
 @Service
 public class UserService implements UserDetailsService {
 
     @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private Map<String, String> memory = new ConcurrentHashMap<>();
+    public User getUserByName(String username) {
+        return userMapper.findUserByName(username);
+    }
 
-    public UserService() {
-        memory.put("user", "password");
+    public void save(String username, String password) {
+        userMapper.save(username, bCryptPasswordEncoder.encode(password));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (!memory.containsKey(username)) {
+        User user = getUserByName(username);
+        if (Objects.isNull(user)) {
             throw new UsernameNotFoundException(username + " is not found!");
         }
-        String encodedPassword = bCryptPasswordEncoder.encode(memory.get(username));
-        return new org.springframework.security.core.userdetails.User(username, encodedPassword, Collections.emptyList());
+
+        return new org.springframework.security.core.userdetails.User(username, user.getEncryptedPassword(), Collections.emptyList());
     }
 }
