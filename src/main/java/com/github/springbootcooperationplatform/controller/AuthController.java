@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,7 +38,11 @@ public class AuthController {
     @GetMapping(path = "/auth")
     @ResponseBody
     public String auth() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null){
+            return JSON.toJSONString(Result.builder().status("ok").isLogin(false).build());
+        }
+        String username = authentication.getName();
         User loggedUser = userService.getUserByName(username);
         if (Objects.isNull(loggedUser)) {
             return JSON.toJSONString(Result.builder().status("ok").isLogin(false).build());
