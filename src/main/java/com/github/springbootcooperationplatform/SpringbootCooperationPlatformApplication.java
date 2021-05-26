@@ -9,5 +9,4 @@ public class SpringbootCooperationPlatformApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringbootCooperationPlatformApplication.class, args);
     }
-
 }

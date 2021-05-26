@@ -11,7 +11,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +37,21 @@ public class AuthController {
     @GetMapping(path = "/auth")
     @ResponseBody
     public String auth() {
-        return JSON.toJSONString(Result.builder().status("ok").isLogin(false));
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User loggedUser = userService.getUserByName(username);
+        if (Objects.isNull(loggedUser)) {
+            return JSON.toJSONString(Result.builder().status("ok").isLogin(false).build());
+        }
+        return JSON.toJSONString(Result.builder()
+                .status("ok")
+                .isLogin(true)
+                .data(User.builder()
+                        .id(loggedUser.getId())
+                        .avatar("")
+                        .username(loggedUser.getUsername())
+                        .updatedAt(loggedUser.getUpdatedAt())
+                        .createdAt(loggedUser.getCreatedAt())
+                        .build()).build());
     }
 
     @PostMapping(path = "/auth/register")
@@ -63,7 +76,7 @@ public class AuthController {
         }
         Pattern pt = Pattern.compile("^[a-zA-Z0-9_\\u4e00-\\u9fa5]+$");
         Matcher mt = pt.matcher(username);
-        if (!mt.matches() || username.length() < 1 || username.length() > 15) {
+        if (!mt.matches() || username.length() > 15) {
             return JSON.toJSONString(Result.builder()
                     .status("fail")
                     .msg("用户名请以字母数字下划线或中文命名，且长度要求小于十六位").build());
@@ -121,6 +134,29 @@ public class AuthController {
             return JSON.toJSONString(Result.builder()
                     .status("fail")
                     .msg("密码不正确")
+                    .build()
+            );
+        }
+    }
+
+    @GetMapping(path = "/auth/logout")
+    @ResponseBody
+    public String logout() {
+        String authJson = auth();
+        Result result = JSON.parseObject(authJson, Result.class);
+
+        if (result.getIsLogin()) {
+            SecurityContextHolder.clearContext();
+            return JSON.toJSONString(Result.builder()
+                    .status("ok")
+                    .msg("注销成功")
+                    .build()
+            );
+
+        } else {
+            return JSON.toJSONString(Result.builder()
+                    .status("fail")
+                    .msg("用户尚未登录")
                     .build()
             );
         }

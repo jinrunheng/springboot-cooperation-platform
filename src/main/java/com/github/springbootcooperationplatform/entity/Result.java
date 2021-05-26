@@ -1,5 +1,6 @@
 package com.github.springbootcooperationplatform.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Data
@@ -11,6 +12,6 @@ import lombok.*;
 public class Result {
     private String msg;
     private String status;
-    private boolean isLogin;
+    private Boolean isLogin;
     private Object data;
 }
