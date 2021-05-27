@@ -56,6 +56,13 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.75</version>
         </dependency>
+        <!--okhttp-->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.14.0</version>
+        </dependency>
+
         <!--jacoco-->
         <dependency>
             <groupId>org.jacoco</groupId>
@@ -96,6 +103,66 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+            <!--exec codehaus-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>start-test-database</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>--name</argument>
+                                <argument>test-mysql</argument>
+                                <argument>-e</argument>
+                                <argument>MYSQL_ROOT_PASSWORD=123</argument>
+                                <argument>-e</argument>
+                                <argument>MYSQL_DATABASE=test</argument>
+                                <argument>-p</argument>
+                                <argument>3307:3306</argument>
+                                <argument>-d</argument>
+                                <argument>mysql</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!--需要等数据库启动起来，所以sleep 20s-->
+                    <execution>
+                        <id>wait-test-database-start-up</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>sleep</executable>
+                            <arguments>
+                                <argument>20</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>teardown-test-database</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>rm</argument>
+                                <argument>-f</argument>
+                                <argument>test-mysql</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!--flyway-->
             <plugin>
                 <groupId>org.flywaydb</groupId>
@@ -106,6 +173,20 @@
                     <user>root</user>
                     <password>123</password>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>test-database-setup</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>migrate</goal>
+                        </goals>
+                        <configuration>
+                            <url>jdbc:mysql://localhost:3307/test</url>
+                            <user>root</user>
+                            <password>123</password>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <!--for unit test-->
