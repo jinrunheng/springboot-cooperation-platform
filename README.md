@@ -1,5 +1,5 @@
 ## Spring Boot 多人协作平台项目
-
+[![Build Status](https://travis-ci.com/jinrunheng/springboot-cooperation-platform.svg?branch=master)](https://travis-ci.com/jinrunheng/springboot-cooperation-platform)
 #### 如何在本地启动程序
 
 - 使用 `Docker` 启动数据库
