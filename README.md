@@ -11,3 +11,8 @@
     ```
     mvn flyway:clean flyway:migrate
     ``` 
+- 启动`jenkins` 
+    ```
+    docker run -p 8080:8080 -v `pwd`/jenkins-data:/var/jenkins_home jenkins/jenkins
+    ``` 
+  

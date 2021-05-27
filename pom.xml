@@ -111,11 +111,21 @@
                 <!--for unit test-->
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/integration/*</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <!--for integration test-->
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.22.2</version>
+                <configuration>
+                    <includes>
+                        <include>**/integration/*</include>
+                    </includes>
+                </configuration>
             </plugin>
             <!--jacoco 测试代码覆盖率检测-->
             <plugin>
