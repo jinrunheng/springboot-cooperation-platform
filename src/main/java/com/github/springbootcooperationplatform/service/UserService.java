@@ -25,6 +25,10 @@ public class UserService implements UserDetailsService {
         return userMapper.findUserByName(username);
     }
 
+    public User getUserById(int id) {
+        return userMapper.findUserById(id);
+    }
+
     public void save(String username, String password) {
         userMapper.save(username, bCryptPasswordEncoder.encode(password));
     }

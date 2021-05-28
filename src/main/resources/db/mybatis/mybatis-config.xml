@@ -8,5 +8,6 @@
     </settings>
     <mappers>
         <mapper resource="db/mybatis/mappers/UserMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/BlogMapper.xml"/>
     </mappers>
 </configuration>

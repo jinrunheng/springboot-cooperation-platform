@@ -6,6 +6,9 @@
     <select id="findUserByName" parameterType="string" resultType="com.github.springbootcooperationplatform.entity.User">
         select * from user where username = #{username}
     </select>
+    <select id="findUserById" parameterType="int" resultType="com.github.springbootcooperationplatform.entity.User">
+        select * from user where id = #{id}
+    </select>
     <insert id="save" parameterType="string">
         insert into user(username, encrypted_password, created_at, updated_at)
         values (#{username}, #{encryptedPassword}, now(), now())

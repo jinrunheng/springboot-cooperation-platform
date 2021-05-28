@@ -39,7 +39,7 @@ public class AuthController {
     @ResponseBody
     public String auth() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null){
+        if (authentication == null) {
             return JSON.toJSONString(Result.builder().status("ok").isLogin(false).build());
         }
         String username = authentication.getName();
@@ -52,7 +52,7 @@ public class AuthController {
                 .isLogin(true)
                 .data(User.builder()
                         .id(loggedUser.getId())
-                        .avatar("")
+                        .avatar("_")
                         .username(loggedUser.getUsername())
                         .updatedAt(loggedUser.getUpdatedAt())
                         .createdAt(loggedUser.getCreatedAt())
@@ -99,7 +99,7 @@ public class AuthController {
                 .data(User.builder()
                         .id(savedUser.getId())
                         .username(savedUser.getUsername())
-                        .avatar("")
+                        .avatar("_")
                         .updatedAt(savedUser.getUpdatedAt())
                         .createdAt(savedUser.getCreatedAt())
                         .build()).build());
@@ -130,7 +130,7 @@ public class AuthController {
                     .data(User.builder()
                             .id(1)
                             .username(username)
-                            .avatar("")
+                            .avatar("_")
                             .createdAt(Instant.now())
                             .updatedAt(Instant.now())
                             .build()
