@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Objects;
@@ -61,7 +62,7 @@ public class AuthController {
 
     @PostMapping(path = "/auth/register")
     @ResponseBody
-    public String register(@RequestBody Map<String, String> usernameAndPassword) {
+    public String register(@RequestBody Map<String, String> usernameAndPassword, HttpServletRequest request) {
         // error msg:
         // 1. 用户名或密码不能为空
         // 2. 该用户已注册
@@ -93,6 +94,7 @@ public class AuthController {
         }
         userService.save(username, password);
         User savedUser = userService.getUserByName(username);
+        login(usernameAndPassword, request);
         return JSON.toJSONString(Result.builder()
                 .status("ok")
                 .msg("注册成功")
@@ -107,7 +109,7 @@ public class AuthController {
 
     @PostMapping(path = "/auth/login")
     @ResponseBody
-    public String login(@RequestBody Map<String, String> usernameAndPassword) {
+    public String login(@RequestBody Map<String, String> usernameAndPassword, HttpServletRequest request) {
         String username = usernameAndPassword.get("username");
         String password = usernameAndPassword.get("password");
         UserDetails userDetails = null;

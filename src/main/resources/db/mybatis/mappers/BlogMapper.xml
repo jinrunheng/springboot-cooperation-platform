@@ -3,6 +3,34 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.springbootcooperationplatform.repository.BlogMapper">
+    <select id="findBlogs" resultMap="blog">
+        SELECT
+        blog.id as blog_id,
+        blog.title as blog_title,
+        blog.description as blog_description,
+        blog.content as blog_content,
+        blog.updated_at as blog_updated_at,
+        blog.created_at as blog_created_at,
+        user.id as user_id,
+        user.username as user_username,
+        user.avatar as user_avatar,
+        user.updated_at as user_updated_at,
+        user.created_at as user_created_at
+        FROM blog
+        LEFT JOIN user
+        ON blog.user_id = user.id
+        <if test="userId != null">
+            WHERE blog.user_id = #{userId}
+        </if>
+        order by blog.updated_at desc
+        limit ${(page-1) * pageSize}, #{pageSize}
+    </select>
+    <select id="count" resultType="int">
+        SELECT count(*) FROM blog
+        <if test="userId != null">
+            WHERE user_id = #{userId}
+        </if>
+    </select>
     <select id="findBlogById" parameterType="int" resultMap="blog">
         select
         blog.id as blog_id,
@@ -21,7 +49,8 @@
         on blog.user_id = user.id
         where blog.id = #{id}
     </select>
-    <insert id="insertBlog" parameterType="com.github.springbootcooperationplatform.entity.Blog" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <insert id="insertBlog" parameterType="com.github.springbootcooperationplatform.entity.Blog" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
         insert into blog
         (user_id,title,description,content,created_at,updated_at)
         values
@@ -31,7 +60,7 @@
         update blog
         set
         title = #{title},
-        description = #{description}
+        description = #{description},
         content = #{content},
         updated_at = now()
         where
