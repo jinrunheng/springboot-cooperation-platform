@@ -88,8 +88,9 @@ public class AvatarHelper {
 
     public String createAvatarUrl(String username) {
         String avatar = null;
+        String s = username.substring(0, 1).concat(new Random().nextInt(10) + "");
         try {
-            avatar = AvatarHelper.createBase64Avatar(Math.abs(username.hashCode()));
+            avatar = AvatarHelper.createBase64Avatar(Math.abs(username.substring(0, 1).hashCode()));
         } catch (IOException e) {
         }
         return AvatarHelper.BASE64_PREFIX + avatar;
