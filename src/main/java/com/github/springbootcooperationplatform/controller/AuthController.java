@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.springbootcooperationplatform.entity.Result;
 import com.github.springbootcooperationplatform.entity.User;
 import com.github.springbootcooperationplatform.service.UserService;
+import com.github.springbootcooperationplatform.utils.AvatarHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -31,6 +32,9 @@ public class AuthController {
 
 
     @Autowired
+    private AvatarHelper avatarHelper;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -53,7 +57,7 @@ public class AuthController {
                 .isLogin(true)
                 .data(User.builder()
                         .id(loggedUser.getId())
-                        .avatar("_")
+                        .avatar(loggedUser.getAvatar())
                         .username(loggedUser.getUsername())
                         .updatedAt(loggedUser.getUpdatedAt())
                         .createdAt(loggedUser.getCreatedAt())
@@ -101,7 +105,7 @@ public class AuthController {
                 .data(User.builder()
                         .id(savedUser.getId())
                         .username(savedUser.getUsername())
-                        .avatar("_")
+                        .avatar(savedUser.getAvatar())
                         .updatedAt(savedUser.getUpdatedAt())
                         .createdAt(savedUser.getCreatedAt())
                         .build()).build());
@@ -127,16 +131,10 @@ public class AuthController {
         try {
             authenticationManager.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(token);
+            User user = userService.getUserByName(username);
             return JSON.toJSONString(Result.builder().status("ok")
                     .msg("登录成功")
-                    .data(User.builder()
-                            .id(1)
-                            .username(username)
-                            .avatar("_")
-                            .createdAt(Instant.now())
-                            .updatedAt(Instant.now())
-                            .build()
-                    ).build());
+                    .data(user).build());
         } catch (BadCredentialsException e) {
             return JSON.toJSONString(Result.builder()
                     .status("fail")

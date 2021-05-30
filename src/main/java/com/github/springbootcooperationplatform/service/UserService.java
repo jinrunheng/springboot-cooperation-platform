@@ -2,6 +2,7 @@ package com.github.springbootcooperationplatform.service;
 
 import com.github.springbootcooperationplatform.entity.User;
 import com.github.springbootcooperationplatform.repository.UserMapper;
+import com.github.springbootcooperationplatform.utils.AvatarHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,9 @@ public class UserService implements UserDetailsService {
     private UserMapper userMapper;
 
     @Autowired
+    private AvatarHelper avatarHelper;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public User getUserByName(String username) {
@@ -32,7 +36,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void save(String username, String password) {
-        userMapper.save(username, bCryptPasswordEncoder.encode(password));
+        userMapper.save(username, bCryptPasswordEncoder.encode(password), avatarHelper.createAvatarUrl(username));
     }
 
     @Override

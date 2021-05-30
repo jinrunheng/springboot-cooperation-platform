@@ -2,6 +2,7 @@ package com.github.springbootcooperationplatform.service;
 
 import com.github.springbootcooperationplatform.entity.User;
 import com.github.springbootcooperationplatform.repository.UserMapper;
+import com.github.springbootcooperationplatform.utils.AvatarHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +18,10 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+
+    @Mock
+    AvatarHelper avatarHelper;
+
     @Mock
     BCryptPasswordEncoder mockEncoder;
 
@@ -30,8 +35,9 @@ class UserServiceTest {
     public void testSave() {
 
         when(mockEncoder.encode("test")).thenReturn("encodedTest");
+        when(avatarHelper.createAvatarUrl("test")).thenReturn("testUrl");
         userService.save("test", "test");
-        verify(mockMapper).save("test", "encodedTest");
+        verify(mockMapper).save("test", "encodedTest", "testUrl");
     }
 
     @Test

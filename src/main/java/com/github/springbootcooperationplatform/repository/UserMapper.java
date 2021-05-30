@@ -8,7 +8,7 @@ public interface UserMapper {
 
     User findUserByName(String username);
 
-    void save(String username,String encryptedPassword);
+    void save(String username,String encryptedPassword,String avatar);
 
     User findUserById(int id);
 }
