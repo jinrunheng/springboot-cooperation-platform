@@ -57,5 +57,5 @@
 
 谢谢
 ### 版权信息
-
+[License MIT](https://github.com/jinrunheng/springboot-cooperation-platform/blob/master/LICENSE) 
   

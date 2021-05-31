@@ -46,7 +46,7 @@ Development environment and tools
     ```
     mvn flyway:clean flyway:migrate
     ``` 
-- use `jenkins` 
+- Use `jenkins` 
     ```
     docker run -p 8080:8080 -v `pwd`/jenkins-data:/var/jenkins_home jenkins/jenkins
     ``` 
@@ -61,4 +61,4 @@ If you have any problem，Please [submit](https://github.com/jinrunheng/springbo
 Thank you
 
 ### License 
- 
+[License MIT](https://github.com/jinrunheng/springboot-cooperation-platform/blob/master/LICENSE) 
