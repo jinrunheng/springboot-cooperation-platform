@@ -4,10 +4,9 @@
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/jinrunheng/springboot-cooperation-platform?color=pink)
 ![GitHub issues](https://img.shields.io/github/issues/jinrunheng/springboot-cooperation-platform?color=yellow)
 
-English | 中文文档
+[English](https://github.com/jinrunheng/springboot-cooperation-platform/blob/master/README.md) | 中文文档
 
 ### 项目介绍
-
 
 这是一个简单的，基于 Spring Boot 框架开发的博客项目。
 
@@ -16,7 +15,7 @@ English | 中文文档
 - [前端代码](https://github.com/jinrunheng/vue-blog-preview)
 
 项目使用的技术栈与工具
-- Java 1.8
+- JDK 1.8
 - Spring Boot 2.1.3.RELEASE
 - Maven
 - Docker
@@ -42,11 +41,11 @@ English | 中文文档
     ```
     docker run --name my-mysql -e MYSQL_ROOT_PASSWORD=123 -e MYSQL_DATABASE=test -p 3306:3306 -d mysql
     ```
-- 使用`flyway` 开启数据库持久化，完成`user`表，`blog`表的创建
+3. 使用`flyway` 开启数据库持久化，完成`user`表，`blog`表的创建
     ```
     mvn flyway:clean flyway:migrate
     ``` 
-- 启动`jenkins` 
+4. 启动`jenkins` 
     ```
     docker run -p 8080:8080 -v `pwd`/jenkins-data:/var/jenkins_home jenkins/jenkins
     ``` 
@@ -56,7 +55,7 @@ English | 中文文档
 
 如果您有任何问题，请提交 issue，或发送邮件至 jinrunheng@foxmail.com
 
-
+谢谢
 ### 版权信息
 
   
