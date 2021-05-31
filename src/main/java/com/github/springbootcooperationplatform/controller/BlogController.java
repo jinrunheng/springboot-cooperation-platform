@@ -94,7 +94,6 @@ public class BlogController {
     }
 
     @PatchMapping(path = "/blog/{id}")
-    @ResponseBody
     public String updateBlog(@PathVariable int id, @RequestBody Map<String, Object> map) {
         // 判断用户是否登陆
         if (!authService.isLoggedIn()) {
@@ -128,7 +127,6 @@ public class BlogController {
     }
 
     @DeleteMapping(path = "/blog/{id}")
-    @ResponseBody
     public String deleteBlog(@PathVariable int id) {
         // 判断用户是否登陆
         if (!authService.isLoggedIn()) {
